@@ -23,9 +23,13 @@ class Product:
     changelog: (When,Who,What)
         RRoot,1.1.2030,Created Class
         Drew Cochran, 06MAR2023, Modified code to complete assignment 8
+        Drew Cochran, 08MAR2023, Continued modifying class to complete assignment 8
     """
 
     # TODO: Add Code for Product class (Constructor, Properties, & Methods)
+
+    # Class variable
+    product_tuple = ()
 
 
     # Constructor
@@ -33,20 +37,48 @@ class Product:
         """
         Init function for the class. Defines product standard price and product name for use within the object.
         """
-        # Establish initial variables for class and define types
-        #product_name = ""
-        #product_price = 0.0
-        lst_product = []
-        try:
-            if str(product_name).isnumeric():
-                raise ValueError
-            else:
-                self.product_name_str = product_name.title()
-        except ValueError as v:
-            print(v)
-            print("Product name must be alphabet characters only.")
 
-        self.product_price_flt = product_price
+        # Establishes initial variables
+        self._product_name = product_name
+        self._product_price = product_price
+
+        # Get to return product name
+        @property
+        def get_product_name(self):
+            return str(self.product_name).title()
+
+        # Get to return product price
+        @property
+        def get_product_price(self):
+            return float(self.product_price)
+
+
+        # Setter for the name, then function to check if the value passed is numericly False.
+        @product_name.setter
+        def product_name_check(self, value):
+            try:
+                if str(product_name).isnumeric() == False:
+                    raise ValueError
+                else:
+                    self.product_name = value
+            except ValueError as v:
+                print(v)
+                print("Product name must be alphabet characters only.")
+
+        # Setter for product price. Checks to make sure value is numericly True.
+        @product_price.setter
+        def product_price_check(self, value):
+            try:
+                if product_price.isnumeric() == True:
+                    self.product_price = value
+
+                else:
+                    raise ValueError
+
+            except ValueError as v:
+                print(v)
+                print("Product price must be a numeric value.")
+
 
 
 
@@ -60,6 +92,17 @@ class Product:
         in from a file.
         """
 
+
+        # creating list
+
+
+    @staticmethod
+    def __str__(self):
+        """
+        Returns the product name and product price as a string with a comma and space inbetween..
+        """
+        object_data = self.product_name + ', ' + self.product_price
+        return object_data
 
 
 # Processing  ------------------------------------------------------------- #
@@ -78,6 +121,8 @@ class FileProcessor:
     pass
     # TODO: Add Code to process data from a file
     # TODO: Add Code to process data to a file
+
+
 
 # Processing  ------------------------------------------------------------- #
 
