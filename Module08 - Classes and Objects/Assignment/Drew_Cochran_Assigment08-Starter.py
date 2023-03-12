@@ -6,6 +6,8 @@
 # RRoot,1.1.2030,Created started script
 # RRoot,1.1.2030,Added pseudo-code to start assignment 8
 # Drew Cochran, 06MAR2023,Modified code to complete assignment 8
+# Drew Cochran 11MAR2023, Completed Product and FileProcessor class; need to write main body script
+#
 # ------------------------------------------------------------------------ #
 
 # Data -------------------------------------------------------------------- #
