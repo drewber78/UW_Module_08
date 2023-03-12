@@ -6,11 +6,15 @@
 # RRoot,1.1.2030,Created started script
 # RRoot,1.1.2030,Added pseudo-code to start assignment 8
 # Drew Cochran, 06MAR2023,Modified code to complete assignment 8
-# Drew Cochran 11MAR2023, Completed Product and FileProcessor class; need to write main body script
+# Drew Cochran 11MAR2023, Completed Product, FileProcessor, and IO class; need to write main body script
 #
 # ------------------------------------------------------------------------ #
 
+# imports into code
+import os
+
 # Data -------------------------------------------------------------------- #
+
 strFileName = 'products.txt'
 lstOfProductObjects = []
 
@@ -124,7 +128,7 @@ class FileProcessor:
 
     # TODO: Add Code to process data from a file
 
-    def ReadFile(self):
+    def read_data_from_file(self, strFileName):
         """
         Reads the data from products.txt into lstOfProductObjects for future use.
         """
@@ -132,7 +136,7 @@ class FileProcessor:
         # Function to read the file products.txt into memory for manipulation and display later in the program
         # Try for seeing if file is in home dictionary of program
         try:
-            objProductsList = open("products.txt", "r")
+            objProductsList = open(os.getcwd() + "/" + strFileName, "r")
             for row in objProductsList:
                 lstRow = row.split(",")
                 dicRow = {"Product": lstRow[0], "Price": lstRow[1].strip()}
@@ -245,6 +249,7 @@ class IO:
 
 # Main Body of Script  ---------------------------------------------------- #
 # TODO: Add Data Code to the Main body
+
 # Load data from file into a list of product objects when script starts
 # Show user a menu of options
 # Get user's menu option choice
