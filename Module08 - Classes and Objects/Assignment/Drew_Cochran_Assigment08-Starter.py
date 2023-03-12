@@ -42,68 +42,68 @@ class Product:
         self._product_name = product_name
         self._product_price = product_price
 
-        # Get to return product name
-        @property
-        def get_product_name(self):
-            return str(self.product_name).title()
+    # Get to return product name
+    @property
+    def get_product_name(self):
+        return str(self._product_name).title()
 
-        # Get to return product price
-        @property
-        def get_product_price(self):
-            return float(self.product_price)
+    # Setter for the name, then function to check if the value passed is numericly False.
+    # @product_name.setter
+    def set_product_name(self, value):
+        try:
+            if str(self._product_name).isnumeric() == False:
+                raise ValueError
+            else:
+                self._product_name = value
+        except ValueError as v:
+            print(v)
+            print("Product name must be alphabet characters only.")
 
+    # Get to return product price
+    @property
+    def get_product_price(self):
+        return float(self._product_price)
 
-        # Setter for the name, then function to check if the value passed is numericly False.
-        @product_name.setter
-        def product_name_check(self, value):
-            try:
-                if str(product_name).isnumeric() == False:
-                    raise ValueError
-                else:
-                    self.product_name = value
-            except ValueError as v:
-                print(v)
-                print("Product name must be alphabet characters only.")
+    # Setter for product price. Checks to make sure value is numericly True.
+    # @product_price.setter
+    def set_product_price(self, value):
+        try:
+            if self._product_price.isnumeric() == True:
+                self._product_price = value
 
-        # Setter for product price. Checks to make sure value is numericly True.
-        @product_price.setter
-        def product_price_check(self, value):
-            try:
-                if product_price.isnumeric() == True:
-                    self.product_price = value
+            else:
+                raise ValueError
 
-                else:
-                    raise ValueError
-
-            except ValueError as v:
-                print(v)
-                print("Product price must be a numeric value.")
-
-
-
+        except ValueError as v:
+            print(v)
+            print("Product price must be a numeric value.")
 
 # Data -------------------------------------------------------------------- #
 
-    @staticmethod
-    def product_list(product_name, standard_price):
-        """
-        Object that takes in the product name and the product price. Creates a list, and appends data to the list
-        everytime time it is used. Able to be recalled when writing to a file. List is used to store data when reading
-        in from a file.
-        """
-
-
-        # creating list
-
+    # @staticmethod
+    # def product_list(product_name, standard_price):
+    #     """
+    #     Object that takes in the product name and the product price. Creates a list, and appends data to the list
+    #     everytime time it is used. Able to be recalled when writing to a file. List is used to store data when reading
+    #     in from a file.
+    #     """
+    #
+    #     # Adds data from Product class object product_name and product_price to lstOfProductObjects
 
     @staticmethod
-    def __str__(self):
+    def to_string(self):
         """
         Returns the product name and product price as a string with a comma and space inbetween..
         """
-        object_data = self.product_name + ', ' + self.product_price
+        object_data = self._product_name + ', ' + self._product_price
         return object_data
 
+    def __str__(self):
+        """
+        Returns to_string. Overrides default Python string function.
+        :return: to_string function
+        """
+        return self.to_string()
 
 # Processing  ------------------------------------------------------------- #
 class FileProcessor:
@@ -118,10 +118,46 @@ class FileProcessor:
         RRoot,1.1.2030,Created Class
         <Your Name>,<Today's Date>,Modified code to complete assignment 8
     """
-    pass
+
+
     # TODO: Add Code to process data from a file
+
+    def ReadFile(self):
+        """
+        Reads the data from products.txt into lstOfProductObjects for future use.
+        """
+
+        # Function to read the file products.txt into memory for manipulation and display later in the program
+        # Try for seeing if file is in home dictionary of program
+        try:
+            objProductsList = open("products.txt", "r")
+            for row in objProductsList:
+                lstRow = row.split(",")
+                dicRow = {"Product": lstRow[0], "Price": lstRow[1].strip()}
+                lstOfProductObjects.append(dicRow)
+            objProductsList.close()
+
+        # Print error statement prompting user to locate file needed to run program
+        except:
+            print("File not found. Locate products.txt and ensure file is in the same directory as program.")
+
     # TODO: Add Code to process data to a file
 
+    def WriteFile(self):
+        """
+        Writes the data from lstOfProductObjects to products.txt and closes file. Overwrites all existing data.
+        """
+        # Opens file
+        objProductsList = open("products.txt", "w")
+
+        # Iterate through lstOfProductObjects to then write to products.txt. Adds a comma and a new line after each
+        # list item pair of product_name and product_price
+        for row in lstOfProductObjects:
+            objProductsList.write(str(row["Product"]) + ', ' + str(row["Price"]) + '\n')
+
+        # closes file and prints success statement
+        objProductsList.close()
+        print("Items saved successfully to products.txt")
 
 
 # Processing  ------------------------------------------------------------- #
@@ -157,10 +193,50 @@ class IO:
         print()  # Add an extra line for looks in the terminal window
 
     # TODO: Add code to get user's choice
+    def UserChoice(self):
+        """
+        Grabs inputted user's choice and returns value.
+        """
+
+        strChoice = str(input("Which option would you like to perform? [1 to 4] - "))
+        return strChoice
 
     # TODO: Add code to show the current data from the file to user
+    def print_current_list_items(self):
+        """
+        Function to display data from lstOfProductObjects.
+        """
+        # for loop to iterate through lstOfProductObjects
+        for row in lstOfProductObjects:
+            print(row, sep='\n', end='\n')
+        return
 
     # TODO: Add code to get product data from user
+    def input_product_data(self):
+        """
+        Takes inputed user data and adds to lstOfProductObjects
+        """
+        while(True):
+            print("Type exit at any prompt to exit to main menu.")
+
+            # User input for product name
+            strProduct = str(input("What is the product name, one word only? "))
+            # if check for use of exit word
+            if strProduct.lower == 'exit':
+                break
+
+            # User input for product price
+            fltPrice = input("What is the product price? ")
+            # if check for use of exit word
+            if fltPrice.lower == 'exit':
+                break
+            float(fltPrice)
+
+            # Create Product class object with new user data
+            objProduct = Product(strProduct, fltPrice)
+            dicRow = {"Product" : objProduct.get_product_name, "Price" : objProduct.get_product_price}
+            lstOfProductObjects.append(dicRow)
+
 
 # Presentation (Input/Output)  -------------------------------------------- #
 
