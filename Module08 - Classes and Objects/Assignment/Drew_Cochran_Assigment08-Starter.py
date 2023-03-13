@@ -7,6 +7,8 @@
 # RRoot,1.1.2030,Added pseudo-code to start assignment 8
 # Drew Cochran, 06MAR2023,Modified code to complete assignment 8
 # Drew Cochran 11MAR2023, Completed Product, FileProcessor, and IO class; need to write main body script
+# Drew Cochran, 13MAR2023, Changed code to work through objects rather than a dictionary of objects; completed
+#                       main body of script; ready for debugging.
 #
 # ------------------------------------------------------------------------ #
 
@@ -17,6 +19,7 @@ import os
 
 strFileName = 'products.txt'
 lstOfProductObjects = []
+strExit = 'exit'
 
 class Product:
     """Stores data about a product:
@@ -53,7 +56,7 @@ class Product:
     def get_product_name(self):
         return str(self._product_name).title()
 
-    # Setter for the name, then function to check if the value passed is numericly False.
+    # Setter for the name, then function to check if the value passed is numerically False.
     # @product_name.setter
     def set_product_name(self, value):
         try:
@@ -70,8 +73,8 @@ class Product:
     def get_product_price(self):
         return float(self._product_price)
 
-    # Setter for product price. Checks to make sure value is numericly True.
-    # @product_price.setter
+    # Setter for product price. Checks to make sure value is numerically True.
+    #@product_price.setter
     def set_product_price(self, value):
         try:
             if self._product_price.isnumeric() == True:
@@ -109,7 +112,7 @@ class Product:
         Returns to_string. Overrides default Python string function.
         :return: to_string function
         """
-        return self.to_string()
+        return self.to_string(self)
 
 # Processing  ------------------------------------------------------------- #
 class FileProcessor:
@@ -128,38 +131,52 @@ class FileProcessor:
 
     # TODO: Add Code to process data from a file
 
-    def read_data_from_file(self, strFileName):
+    def __init__(self):
+        """
+        Init for class
+        """
+
+    def read_data_from_file(self):
         """
         Reads the data from products.txt into lstOfProductObjects for future use.
         """
 
         # Function to read the file products.txt into memory for manipulation and display later in the program
         # Try for seeing if file is in home dictionary of program
-        try:
-            objProductsList = open(os.getcwd() + "/" + strFileName, "r")
-            for row in objProductsList:
-                lstRow = row.split(",")
-                dicRow = {"Product": lstRow[0], "Price": lstRow[1].strip()}
-                lstOfProductObjects.append(dicRow)
-            objProductsList.close()
 
-        # Print error statement prompting user to locate file needed to run program
-        except:
-            print("File not found. Locate products.txt and ensure file is in the same directory as program.")
+        # if check to see if file exists; else, file is created via append
+        isExisting = os.path.exists(os.getcwd() + "/" + os.path.normpath(strFileName))
+        if isExisting is True:
+            try:
+                objProductsList = open(os.getcwd() + "/" + strFileName, "r")
+                for row in objProductsList:
+                    lstRow = row.split(",")
+                    objRow = Product(lstRow[0], lstRow[1])
+                    lstOfProductObjects.append(objRow.get_product_name, objRow.get_product_price)
+                objProductsList.close()
+
+            # Print error statement prompting user to locate file needed to run program
+            except:
+                print("File not found. Locate products.txt and ensure file is in the same directory as program.")
+
+        else:
+            objProductsList = open(os.getcwd() + "/" + os.path.normpath(strFileName), "a")
+            objProductsList.close()
 
     # TODO: Add Code to process data to a file
 
-    def WriteFile(self):
+    def save_data_to_file(self):
         """
         Writes the data from lstOfProductObjects to products.txt and closes file. Overwrites all existing data.
         """
+
         # Opens file
-        objProductsList = open("products.txt", "w")
+        objProductsList = open(os.getcwd() + "/" + os.path.normpath(strFileName), "w")
 
         # Iterate through lstOfProductObjects to then write to products.txt. Adds a comma and a new line after each
         # list item pair of product_name and product_price
         for row in lstOfProductObjects:
-            objProductsList.write(str(row["Product"]) + ', ' + str(row["Price"]) + '\n')
+            objProductsList.write(str(row.get_product_name) + str(row.get_product_price) + '\n')
 
         # closes file and prints success statement
         objProductsList.close()
@@ -182,6 +199,12 @@ class IO:
     changelog: (When,Who,What)
         RRoot,1.1.2030,Created Class:
     """
+
+    def __int__(self):
+        """
+        Init for class
+        """
+
     # Add code to show menu to user (Done for you as an example)
     @staticmethod
     def print_menu_items():
@@ -199,7 +222,8 @@ class IO:
         print()  # Add an extra line for looks in the terminal window
 
     # TODO: Add code to get user's choice
-    def UserChoice(self):
+    @staticmethod
+    def UserChoice():
         """
         Grabs inputted user's choice and returns value.
         """
@@ -214,34 +238,19 @@ class IO:
         """
         # for loop to iterate through lstOfProductObjects
         for row in lstOfProductObjects:
-            print(row, sep='\n', end='\n')
+            print(row.get_product_name, row.get_product_price, sep='\n', end='\n')
         return
 
     # TODO: Add code to get product data from user
-    def input_product_data(self):
+    def input_product_data(self, strProduct, fltPrice):
         """
-        Takes inputed user data and adds to lstOfProductObjects
+        Takes inputted user data and adds to lstOfProductObjects
         """
-        while(True):
-            print("Type exit at any prompt to exit to main menu.")
 
-            # User input for product name
-            strProduct = str(input("What is the product name, one word only? "))
-            # if check for use of exit word
-            if strProduct.lower == 'exit':
-                break
-
-            # User input for product price
-            fltPrice = input("What is the product price? ")
-            # if check for use of exit word
-            if fltPrice.lower == 'exit':
-                break
-            float(fltPrice)
-
-            # Create Product class object with new user data
-            objProduct = Product(strProduct, fltPrice)
-            dicRow = {"Product" : objProduct.get_product_name, "Price" : objProduct.get_product_price}
-            lstOfProductObjects.append(dicRow)
+        # Create Product class object with new user data
+        objProduct = Product(strProduct, fltPrice)
+        lstOfProductObjects.append(objProduct.get_product_name, objProduct.get_product_price)
+        print("Product data successfully added to list")
 
 
 # Presentation (Input/Output)  -------------------------------------------- #
@@ -251,11 +260,62 @@ class IO:
 # TODO: Add Data Code to the Main body
 
 # Load data from file into a list of product objects when script starts
-# Show user a menu of options
-# Get user's menu option choice
-    # Show user current data in the list of product objects
-    # Let user add data to the list of product objects
-    # let user save current data to file and exit program
+FileProcessor.read_data_from_file(strFileName)
 
-# Main Body of Script  ---------------------------------------------------- #
+# Show user a menu of options
+while(True):
+    IO.print_menu_items()
+    # Get user's menu option choice
+    choice_str = IO.UserChoice()
+
+    # if checks for user selected menu option
+    # Show user current data in the list of product objects
+    if choice_str.strip() == '1':
+        showLst = IO.print_menu_items()
+        print(showLst)
+        continue
+
+    # Let user add data to the list of product objects
+    elif choice_str.strip() == '2':
+        choice_two = IO()
+        # While loop to allow user to continue inputting items until "exit" is typed
+        while (True):
+            print("Type exit at any prompt to exit to main menu.")
+
+            # User input for product name
+            strProduct = str(input("What is the product name, one word only? "))
+            # if check for use of exit word
+            if strProduct.lower == strExit:
+                break
+
+            # User input for product price
+            fltPrice = input("What is the product price? ")
+            # if check for use of exit word
+            if fltPrice.lower == strExit:
+                break
+
+            else:
+                float(fltPrice)
+
+            choice_two.input_product_data(strProduct, fltPrice)
+
+        continue
+
+    # let user save current data to file and exit program
+    elif choice_str.strip() == '3':
+        choice_three = FileProcessor()
+        choice_three.save_data_to_file()
+        print("Data saved.")
+        continue
+
+    # Exit program
+    elif choice_str.strip() == '4':
+        print("Goodbye!")
+        break
+
+    # else for if the user inputted anything other than 1, 2, 3, or 4
+    else:
+        print("Selection must be 1 thru 4.")
+
+# Main Body of Script End  ---------------------------------------------------- #
 
